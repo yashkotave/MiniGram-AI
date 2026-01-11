@@ -4,6 +4,7 @@ const userModel = require('../models/user.model');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth.middleware');
 const multer = require('multer');
+const {createPostController} = require('../controllers/post.controller');
 
 const upload = multer({storage: multer.memoryStorage()});
 
@@ -12,7 +13,7 @@ const upload = multer({storage: multer.memoryStorage()});
 
 router.post('/',
     authMiddleware,//req.user = User data
-    uplaod.single('image'),
+    upload.single('image'),
     createPostController);
 
 

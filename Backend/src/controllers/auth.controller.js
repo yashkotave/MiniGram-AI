@@ -1,65 +1,58 @@
-const userModel = require("../models/user.model")
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcryptjs")
-
-// common cookie options
-const cookieOptions = {
-  httpOnly: true,
-  maxAge: 24 * 60 * 60 * 1000 // 1 day
-}
-
+const userModel = require('../models/user.model');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 /* =========================
    REGISTER CONTROLLER
 ========================= */
 async function registerController(req, res) {
   try {
-    const { username, password } = req.body
-
-    // validation
+    const { username, password } = req.body;    
+    // 1️⃣ username required
     if (!username || !password) {
       return res.status(400).json({
         message: "Username and password are required"
-      })
+      });
     }
 
-    // check existing user
-    const existingUser = await userModel.findOne({ username })
-    if (existingUser) {
+    // 2️⃣ check existing user (username only)
+    const isUserAlreadyExists = await userModel.findOne({ username });
+    if (isUserAlreadyExists) {
       return res.status(400).json({
         message: "User already exists"
-      })
+      });
     }
 
-    // hash password
-    const hashedPassword = await bcrypt.hash(password, 10)
+    // 3️⃣ create user
+    const user = await userModel.create({ 
+        username, 
+        password: await bcrypt.hash(password, 10)   
+     });
 
-    // create user
-    const user = await userModel.create({
-      username,
-      password: hashedPassword
-    })
-
-    // generate token
+    // 4️⃣ generate token
     const token = jwt.sign(
       { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    )
+      process.env.JWT_SECRET
+    );
 
-    // set cookie
-    res.cookie("token", token, cookieOptions)
+    // 5️⃣ set cookie
+    res.cookie("token", token, {
+      httpOnly: true
+    });
 
+    // 6️⃣ response
     return res.status(201).json({
       message: "User registered successfully",
       user: {
         id: user._id,
         username: user.username
       }
-    })
+    });
+
   } catch (error) {
     return res.status(500).json({
-      message: "Error registering user"
-    })
+      message: "Error registering user",
+      error: error.message
+    });
   }
 }
 
@@ -68,56 +61,53 @@ async function registerController(req, res) {
 ========================= */
 async function loginController(req, res) {
   try {
-    const { username, password } = req.body
+    const { username, password } = req.body;
 
-    // validation
-    if (!username || !password) {
-      return res.status(400).json({
-        message: "Username and password are required"
-      })
-    }
-
-    // check user
-    const user = await userModel.findOne({ username })
+    // 1️⃣ check user exists
+    const user = await userModel.findOne({ username });
     if (!user) {
       return res.status(400).json({
         message: "Invalid credentials"
-      })
+      });
     }
 
-    // verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password)
-    if (!isPasswordValid) {
+    // 2️⃣ check password (plain for now)
+    if (bcrypt.compareSync(password, user.password) === false ) {
       return res.status(400).json({
-        message: "Invalid credentials"
-      })
+        message: "Invalid password"
+      });
     }
 
-    // generate token
+
+    // 3️⃣ generate token
     const token = jwt.sign(
       { id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    )
+    );
 
-    // set cookie
-    res.cookie("token", token, cookieOptions)
+    // 4️⃣ set cookie
+    res.cookie("token", token, {
+      httpOnly: true
+    });
 
+    // 5️⃣ response
     return res.status(200).json({
       message: "User logged in successfully",
       user: {
         id: user._id,
         username: user.username
       }
-    })
+    });
+
   } catch (error) {
     return res.status(500).json({
-      message: "Error logging in"
-    })
+      message: "Error logging in",
+      error: error.message
+    });
   }
 }
 
 module.exports = {
   registerController,
   loginController
-}
+};

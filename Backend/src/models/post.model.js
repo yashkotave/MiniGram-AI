@@ -1,13 +1,13 @@
-const mongooose = require('mongoose');
+const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
-        caption: String,
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User' 
-        }
+    },
+    caption: String,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User' 
     }
 })
 
