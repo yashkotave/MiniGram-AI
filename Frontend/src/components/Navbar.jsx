@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Menu, X, Home, Heart, MessageCircle, User, LogOut } from 'lucide-react';
 
 export default function Navbar() {
@@ -22,9 +23,9 @@ export default function Navbar() {
           
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="/" className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
+            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent">
               MiniGram
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -57,12 +58,12 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                <Link to="/auth" className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
                   Sign In
-                </button>
-                <button className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition-shadow">
+                </Link>
+                <Link to="/auth" className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition-shadow">
                   Sign Up
-                </button>
+                </Link>
               </>
             )}
           </div>
@@ -112,13 +113,13 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              <div className="space-y-2 pt-2">
-                <button className="w-full px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+          <div className="md:hidden space-y-2 pt-2">
+                <Link to="/auth" className="w-full block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
                   Sign In
-                </button>
-                <button className="w-full px-4 py-2 text-sm font-medium bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition-shadow">
+                </Link>
+                <Link to="/auth" className="w-full block px-4 py-2 text-sm font-medium bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-lg hover:shadow-lg transition-shadow text-center">
                   Sign Up
-                </button>
+                </Link>
               </div>
             )}
           </div>
