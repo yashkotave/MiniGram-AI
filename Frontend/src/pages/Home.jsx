@@ -1,0 +1,45 @@
+export default function Home() {
+  return (
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="text-center mb-16">
+        <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          Welcome to MiniGram
+        </h1>
+        <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
+          Share your moments with the world
+        </p>
+      </div>
+
+      {/* Featured Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {[1, 2, 3, 4, 5, 6].map((item) => (
+          <div
+            key={item}
+            className="group relative bg-gradient-to-br from-pink-400 to-orange-400 rounded-xl overflow-hidden cursor-pointer h-64 sm:h-72"
+          >
+            <div className="w-full h-full bg-gradient-to-br from-pink-500 to-orange-500 opacity-90 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="text-center text-white">
+                <div className="text-5xl font-bold mb-2">{item}</div>
+                <p className="text-sm">Featured Post</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-gradient-to-r from-pink-500 to-orange-500 rounded-2xl px-8 py-16 text-center text-white mb-12">
+        <h2 className="text-3xl font-bold mb-4">Ready to share your story?</h2>
+        <p className="text-lg mb-8 text-pink-100">
+          Join thousands of creators and build your community on MiniGram
+        </p>
+        <a
+          href="/auth"
+          className="inline-block px-8 py-3 bg-white text-pink-600 font-bold rounded-lg hover:shadow-lg transition-shadow"
+        >
+          Get Started
+        </a>
+      </div>
+    </main>
+  );
+}
