@@ -1,6 +1,13 @@
+import { useState } from 'react';
+import PostForm from '../components/PostForm';
+import { Plus } from 'lucide-react';
+
 export default function Home() {
+  const [isPostFormOpen, setIsPostFormOpen] = useState(false);
+
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
       <div className="text-center mb-12 sm:mb-16">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">
           Welcome to MiniGram
@@ -41,5 +48,18 @@ export default function Home() {
         </a>
       </div>
     </main>
+
+      {/* Floating Action Button */}
+      <button
+        onClick={() => setIsPostFormOpen(true)}
+        className="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-r from-pink-500 to-orange-500 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center z-40 hover:scale-110 transform duration-200"
+        title="Create a new post"
+      >
+        <Plus size={28} />
+      </button>
+
+      {/* Post Form Modal */}
+      <PostForm isOpen={isPostFormOpen} onClose={() => setIsPostFormOpen(false)} />
+    </>
   );
 }
