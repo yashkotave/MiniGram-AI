@@ -1,11 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, AlertCircle, CheckCircle } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Authentication() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const { login, register, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -86,24 +90,21 @@ export default function Authentication() {
     setLoading(true);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
       if (isSignUp) {
+        await register(formData.username, formData.password);
         setSuccess('Account created successfully! Welcome to MiniGram');
         setTimeout(() => {
-          setFormData({ email: '', password: '', confirmPassword: '', username: '' });
-          setIsSignUp(false);
-        }, 2000);
+          navigate('/profile');
+        }, 1500);
       } else {
+        await login(formData.username, formData.password);
         setSuccess('Welcome back! Redirecting...');
         setTimeout(() => {
-          // Redirect to home or dashboard
-          window.location.href = '/';
+          navigate('/profile');
         }, 1500);
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(err.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }

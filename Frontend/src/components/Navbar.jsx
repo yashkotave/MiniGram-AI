@@ -1,13 +1,21 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, Home, Heart, MessageCircle, User, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/auth');
+    setIsOpen(false);
   };
 
   const navLinks = [
@@ -44,13 +52,13 @@ export default function Navbar() {
 
           {/* Right Side - User Actions */}
           <div className="hidden md:flex items-center space-x-3 lg:space-x-4">
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <>
-                <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <Link to="/profile" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                   <User size={20} className="text-gray-700 dark:text-gray-300" />
-                </button>
+                </Link>
                 <button 
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={handleLogout}
                   className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <LogOut size={20} className="text-gray-700 dark:text-gray-300" />
@@ -95,17 +103,17 @@ export default function Navbar() {
               </a>
             ))}
             <hr className="my-2 border-gray-200 dark:border-gray-700" />
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <>
-                <a
-                  href="/profile"
+                <Link
+                  to="/profile"
                   className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
                 >
                   <User size={20} />
                   <span>Profile</span>
-                </a>
+                </Link>
                 <button
-                  onClick={() => setIsLoggedIn(false)}
+                  onClick={handleLogout}
                   className="w-full flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm font-medium text-left"
                 >
                   <LogOut size={20} />
