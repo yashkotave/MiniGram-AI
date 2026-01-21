@@ -3,6 +3,7 @@ import Navbar from './components/Navbar'
 import Authentication from './pages/Authentication'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
+import Explore from './pages/Explore'
 import { AuthProvider } from './context/AuthContext'
 import './App.css'
 
@@ -21,6 +22,7 @@ function App() {
               </div>
             }
           />
+          <Route path="/explore" element={<Explore />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </AuthProvider>
