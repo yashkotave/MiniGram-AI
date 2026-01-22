@@ -70,66 +70,66 @@ export default function Explore() {
     });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
       <Navbar />
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-pink-500 via-orange-500 to-red-500 py-8 sm:py-12">
+      <div className="bg-gradient-to-r from-pink-500 via-orange-500 to-red-500 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">Explore the World</h1>
-          <p className="text-pink-100 text-sm sm:text-base">Discover amazing content from creators worldwide</p>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-3 leading-tight">Explore the World</h1>
+          <p className="text-pink-100 text-base sm:text-lg">Discover amazing content from creators worldwide</p>
         </div>
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Search Bar */}
-        <div className="mb-8">
+        <div className="mb-10">
           <div className="relative">
-            <Search className="absolute left-3 top-3.5 text-gray-400" size={20} />
+            <Search className="absolute left-4 top-3.5 text-slate-400" size={20} />
             <input
               type="text"
               placeholder="Search posts by caption, hashtag, or creator..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full pl-12 pr-4 py-3.5 border-2 border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
             />
           </div>
         </div>
 
         {/* Controls Section */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-200 dark:border-gray-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-8 border-b-2 border-slate-200 dark:border-slate-800">
           {/* Sort Options */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-3 flex-wrap">
             {sortOptions.map((option) => {
               const IconComponent = option.icon;
               return (
                 <button
                   key={option.id}
                   onClick={() => setSortBy(option.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-5 py-2.5 rounded-full transition-all duration-200 font-medium text-sm ${
                     sortBy === option.id
                       ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-lg'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
                   }`}
                 >
                   <IconComponent size={18} />
-                  <span className="text-sm font-medium">{option.label}</span>
+                  <span>{option.label}</span>
                 </button>
               );
             })}
           </div>
 
           {/* View Mode & Filter Toggle */}
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button
               onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
-              className="px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+              className="px-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-sm font-medium"
             >
               {viewMode === 'grid' ? 'List' : 'Grid'}
             </button>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-200 text-sm font-medium"
             >
               <Filter size={18} />
               Filter
