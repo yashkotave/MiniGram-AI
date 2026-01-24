@@ -139,17 +139,17 @@ export default function Explore() {
 
         {/* Category Filter */}
         {showFilters && (
-          <div className="mb-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-4">Categories</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-2">
+          <div className="mb-10 p-6 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-4">Categories</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 gap-3">
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setFilterCategory(category.id)}
-                  className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     filterCategory === category.id
                       ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white shadow-md'
-                      : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:border-pink-500'
+                      : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-slate-600 hover:border-pink-400'
                   }`}
                 >
                   <span className="mr-1">{category.icon}</span>
@@ -163,92 +163,92 @@ export default function Explore() {
         {/* Posts Grid/List */}
         {loading ? (
           <div className="flex justify-center items-center min-h-96">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
+            <div className="spinner"></div>
           </div>
         ) : filteredPosts.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-5xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">No posts found</h3>
-            <p className="text-gray-600 dark:text-gray-400">Try adjusting your filters or search terms</p>
+          <div className="text-center py-20">
+            <div className="text-6xl mb-4 opacity-80">🔍</div>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">No posts found</h3>
+            <p className="text-slate-600 dark:text-slate-400 text-lg">Try adjusting your filters or search terms</p>
           </div>
         ) : (
-          <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+          <div className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8' : 'space-y-5'}>
             {filteredPosts.map((post) => (
               <div
                 key={post.id}
-                className={`group rounded-xl overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-all duration-300 ${
+                className={`group rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-card hover:shadow-elevated transition-all duration-300 hover:scale-105 ${
                   viewMode === 'list' ? 'flex gap-4' : ''
                 }`}
               >
                 {/* Image Container */}
-                <div className={`relative overflow-hidden bg-gray-200 dark:bg-gray-700 ${viewMode === 'list' ? 'w-48 h-48 flex-shrink-0' : 'aspect-square'}`}>
+                <div className={`relative overflow-hidden bg-slate-200 dark:bg-slate-700 ${viewMode === 'list' ? 'w-56 h-48 flex-shrink-0' : 'aspect-square'}`}>
                   <img
                     src={post.image || `https://via.placeholder.com/400?text=${encodeURIComponent(post.caption || 'Post')}`}
                     alt={post.caption}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   
                   {/* Overlay with stats */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-                    <div className="flex gap-6 text-white w-full">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-5">
+                    <div className="flex gap-8 text-white w-full">
                       <div className="flex items-center gap-2">
                         <Heart size={18} />
-                        <span className="text-sm font-medium">{post.likes || 0}</span>
+                        <span className="text-sm font-semibold">{post.likes || 0}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <MessageCircle size={18} />
-                        <span className="text-sm font-medium">{post.comments || 0}</span>
+                        <span className="text-sm font-semibold">{post.comments || 0}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Eye size={18} />
-                        <span className="text-sm font-medium">{post.views || 0}</span>
+                        <span className="text-sm font-semibold">{post.views || 0}</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className={`p-4 flex flex-col justify-between ${viewMode === 'list' ? 'flex-1' : ''}`}>
+                <div className={`p-5 flex flex-col justify-between ${viewMode === 'list' ? 'flex-1' : ''}`}>
                   {/* Header */}
                   <div>
-                    <div className="flex items-center gap-2 mb-3">
+                    <div className="flex items-center gap-3 mb-4">
                       <img
                         src={post.author?.avatar || 'https://via.placeholder.com/32'}
                         alt={post.author?.username}
-                        className="w-8 h-8 rounded-full"
+                        className="w-10 h-10 rounded-full border-2 border-slate-200 dark:border-slate-600"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
                           {post.author?.username || 'Anonymous'}
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                           {formatDate(post.createdAt)}
                         </p>
                       </div>
                     </div>
 
-                    <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 mb-3">
+                    <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2 mb-3 font-medium">
                       {post.caption}
                     </p>
 
                     {post.category && (
-                      <span className="inline-block px-2 py-1 text-xs rounded-full bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 font-medium mb-3">
+                      <span className="inline-block px-3 py-1 text-xs rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 font-bold mb-3">
                         #{post.category}
                       </span>
                     )}
                   </div>
 
                   {/* Footer Stats */}
-                  <div className="flex justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <button className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-pink-500 transition-colors text-sm">
+                  <div className="flex justify-around pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <button className="flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-pink-500 transition-colors text-sm font-semibold">
                       <Heart size={16} />
                       <span>{post.likes || 0}</span>
                     </button>
-                    <button className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 transition-colors text-sm">
+                    <button className="flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-blue-500 transition-colors text-sm font-semibold">
                       <MessageCircle size={16} />
                       <span>{post.comments || 0}</span>
                     </button>
-                    <button className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-green-500 transition-colors text-sm">
+                    <button className="flex items-center gap-1 text-slate-600 dark:text-slate-400 hover:text-green-500 transition-colors text-sm font-semibold">
                       <Eye size={16} />
                       <span>{post.views || 0}</span>
                     </button>

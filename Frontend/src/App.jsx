@@ -16,7 +16,7 @@ function App() {
           <Route
             path="/"
             element={
-              <div className="min-h-screen bg-white dark:bg-gray-950">
+              <div className="min-h-screen bg-white dark:bg-slate-950">
                 <Navbar />
                 <Home />
               </div>

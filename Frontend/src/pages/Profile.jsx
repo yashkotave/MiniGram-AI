@@ -48,24 +48,24 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-orange-50 dark:from-gray-900 dark:to-gray-800">
-      <div className="max-w-6xl mx-auto px-4 py-12">
+    <div className="min-h-screen bg-white dark:bg-slate-950">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         {/* Profile Header */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden mb-8">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-elevated overflow-hidden mb-12">
           {/* Banner */}
-          <div className="h-32 bg-gradient-to-r from-pink-500 to-orange-500"></div>
+          <div className="h-40 bg-gradient-to-r from-pink-500 via-orange-500 to-red-500"></div>
 
           {/* Profile Info */}
-          <div className="px-6 sm:px-8 py-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-              <div className="flex items-center">
-                <div className="w-24 h-24 rounded-full bg-gradient-to-r from-pink-400 to-orange-400 flex items-center justify-center text-white text-4xl font-bold -mt-12 border-4 border-white dark:border-gray-800 shadow-lg">
+          <div className="px-8 sm:px-12 py-10">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+              <div className="flex items-center gap-8">
+                <div className="w-28 h-28 rounded-full bg-gradient-to-r from-pink-400 to-orange-400 flex items-center justify-center text-white text-5xl font-bold -mt-16 border-4 border-white dark:border-slate-800 shadow-lg">
                   {user?.username?.charAt(0).toUpperCase()}
                 </div>
-                <div className="ml-6 mt-4 sm:mt-0">
-                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{user?.username}</h1>
-                  <p className="text-gray-600 dark:text-gray-400 flex items-center mt-2">
-                    <User size={16} className="mr-2" />
+                <div className="mt-4 sm:mt-0">
+                  <h1 className="text-4xl font-bold text-slate-900 dark:text-white">{user?.username}</h1>
+                  <p className="text-slate-600 dark:text-slate-400 flex items-center mt-3 text-lg">
+                    <User size={18} className="mr-2" />
                     @{user?.username}
                   </p>
                 </div>
@@ -74,26 +74,26 @@ export default function UserProfile() {
               {/* Logout Button */}
               <button
                 onClick={handleLogout}
-                className="mt-6 sm:mt-0 px-6 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-lg transition-colors flex items-center"
+                className="px-7 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all duration-200 hover:shadow-lg flex items-center gap-2"
               >
-                <LogOut size={18} className="mr-2" />
+                <LogOut size={20} />
                 Logout
               </button>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-3 gap-6 mt-10 pt-10 border-t-2 border-slate-200 dark:border-slate-700">
               <div className="text-center">
-                <p className="text-3xl font-bold text-pink-500">{userPosts.length}</p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">Posts</p>
+                <p className="text-4xl font-bold gradient-text">{userPosts.length}</p>
+                <p className="text-slate-600 dark:text-slate-400 text-base mt-2 font-medium">Posts</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-orange-500">0</p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">Followers</p>
+                <p className="text-4xl font-bold text-orange-500">0</p>
+                <p className="text-slate-600 dark:text-slate-400 text-base mt-2 font-medium">Followers</p>
               </div>
               <div className="text-center">
-                <p className="text-3xl font-bold text-pink-500">0</p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">Following</p>
+                <p className="text-4xl font-bold text-pink-500">0</p>
+                <p className="text-slate-600 dark:text-slate-400 text-base mt-2 font-medium">Following</p>
               </div>
             </div>
           </div>
@@ -101,36 +101,37 @@ export default function UserProfile() {
 
         {/* Posts Section */}
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Your Posts</h2>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Your Posts</h2>
 
           {loading ? (
-            <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">Loading posts...</p>
+            <div className="text-center py-20">
+              <div className="spinner mx-auto"></div>
+              <p className="text-slate-600 dark:text-slate-400 mt-4 text-lg font-medium">Loading posts...</p>
             </div>
           ) : userPosts.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-12 text-center">
-              <p className="text-gray-600 dark:text-gray-400 text-lg">No posts yet. Create your first post!</p>
+            <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-elevated p-16 text-center border-2 border-slate-200 dark:border-slate-700">
+              <p className="text-slate-600 dark:text-slate-400 text-xl font-medium">No posts yet. Create your first post!</p>
               <button
                 onClick={() => navigate('/')}
-                className="mt-6 px-6 py-2 bg-gradient-to-r from-pink-500 to-orange-500 text-white font-semibold rounded-lg hover:shadow-lg transition-shadow"
+                className="mt-8 px-8 py-3 bg-gradient-to-r from-pink-500 to-orange-500 text-white font-bold rounded-xl hover:shadow-lg transition-all duration-200 hover:scale-105"
               >
                 Create Post
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {userPosts.map((post) => (
                 <div
                   key={post._id}
-                  className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+                  className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-card hover:shadow-elevated transition-all duration-300 hover:scale-105 border border-slate-200 dark:border-slate-700"
                 >
                   <div className="aspect-square bg-gradient-to-br from-pink-400 to-orange-400 flex items-center justify-center">
-                    <p className="text-white text-center px-4">{post.caption || 'Post'}</p>
+                    <p className="text-white text-center px-6 text-lg font-semibold">{post.caption || 'Post'}</p>
                   </div>
-                  <div className="p-4">
-                    <p className="text-gray-900 dark:text-white font-semibold truncate">{post.caption}</p>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mt-2">
-                      {new Date(post.createdAt).toLocaleDateString()}
+                  <div className="p-5">
+                    <p className="text-slate-900 dark:text-white font-bold truncate text-lg">{post.caption}</p>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm mt-2 font-medium">
+                      {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </p>
                   </div>
                 </div>
