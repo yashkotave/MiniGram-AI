@@ -1,22 +1,304 @@
-# MiniGram-AI
+# MiniGram-AI - AI-Powered Social Media Platform
 
-A full-stack social media application built with the MERN stack (MongoDB, Express, React, Node.js), featuring AI-powered capabilities for enhanced user experience.
+A modern, full-stack social media application built with the MERN stack (MongoDB, Express, React, Node.js) featuring AI-powered caption generation using Google Gemini.
 
-## Project Overview
+## 🌟 Features
 
-MiniGram-AI is a modern social platform that combines traditional social networking features with artificial intelligence integration using Google's Generative AI. Users can create accounts, share posts, and leverage AI features to enhance their content.
+### Core Features
+- **User Authentication**: Secure JWT-based authentication with HTTP-only cookies
+- **User Profiles**: Complete profile management with follow/unfollow functionality
+- **Post Management**: Create, read, update, and delete posts with images
+- **Social Features**: Like posts, add comments, follow users
+- **AI Caption Generation**: Generate creative captions using Google Gemini AI
+- **Tag System**: Organize posts with hashtags and search by tags
+- **Responsive Design**: Beautiful, fully responsive UI using Tailwind CSS
 
-## Tech Stack
+### AI Features
+- **Auto Caption Generation**: Generate captions based on image descriptions
+- **Multiple Suggestions**: Get multiple caption options to choose from
+- **Hashtag Generation**: AI-powered hashtag suggestions for better reach
+- **Caption Editing**: Edit AI-generated captions before posting
+
+## 🛠️ Tech Stack
 
 ### Backend
-- **Runtime**: Node.js
-- **Framework**: Express.js (v5.2.1)
-- **Database**: MongoDB with Mongoose ODM (v9.1.1)
-- **Authentication**: JWT (jsonwebtoken v9.0.3)
-- **Security**: bcryptjs for password hashing
-- **File Handling**: Multer for file uploads
-- **AI Integration**: Google Generative AI (@google/genai v1.34.0)
-- **Utilities**: Cookie Parser, dotenv for environment variables
+- **Node.js** - Runtime environment
+- **Express.js** - Web framework
+- **MongoDB** - Database with Mongoose ODM
+- **JWT** - Authentication
+- **bcryptjs** - Password hashing
+- **Google Generative AI** - AI caption generation
+- **CORS** - Cross-origin requests
+
+### Frontend
+- **React 19** - UI library
+- **Vite** - Build tool
+- **Tailwind CSS** - Utility-first CSS framework
+- **Lucide React** - Icon library
+- **Axios** - HTTP client
+- **React Router** - Routing
+- **Context API** - State management
+
+## 📋 Prerequisites
+
+- Node.js >= 16.0.0
+- npm >= 8.0.0
+- MongoDB Atlas account
+- Google Generative AI API key
+
+## 🚀 Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd MiniGram-AI
+```
+
+### 2. Backend Setup
+
+```bash
+cd Backend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env.example .env
+
+# Edit .env with your credentials
+# MONGO_URI=your_mongodb_connection_string
+# JWT_SECRET=your_jwt_secret
+# GEMINI_API_KEY=your_gemini_api_key
+# FRONTEND_URL=http://localhost:5173
+```
+
+### 3. Frontend Setup
+
+```bash
+cd Frontend
+
+# Install dependencies
+npm install
+
+# Create .env file
+cp .env.example .env
+
+# Edit .env if needed
+# VITE_API_URL=http://localhost:3000/api
+```
+
+## 🔧 Configuration
+
+### Backend .env
+```
+# Database
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/minigram-ai
+
+# JWT
+JWT_SECRET=your_secret_key_here_min_32_chars
+
+# AI Service
+GEMINI_API_KEY=your_google_gemini_api_key
+
+# Server
+PORT=3000
+NODE_ENV=development
+FRONTEND_URL=http://localhost:5173
+```
+
+### Frontend .env
+```
+VITE_API_URL=http://localhost:3000/api
+```
+
+## 📦 Running the Application
+
+### Development Mode
+
+#### Terminal 1 - Backend
+```bash
+cd Backend
+npm run dev
+# Server runs on http://localhost:3000
+```
+
+#### Terminal 2 - Frontend
+```bash
+cd Frontend
+npm run dev
+# App runs on http://localhost:5173
+```
+
+### Production Build
+
+#### Backend
+```bash
+cd Backend
+npm start
+```
+
+#### Frontend
+```bash
+cd Frontend
+npm run build
+npm run preview
+```
+
+## 📚 API Endpoints
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login user
+- `POST /api/auth/logout` - Logout user
+- `GET /api/auth/me` - Get current user
+- `PUT /api/auth/profile` - Update profile
+- `POST /api/auth/follow/:userId` - Follow user
+- `DELETE /api/auth/unfollow/:userId` - Unfollow user
+- `GET /api/auth/user/:username` - Get user by username
+
+### Posts
+- `POST /api/posts` - Create post
+- `GET /api/posts` - Get all posts
+- `GET /api/posts/feed` - Get user's feed
+- `GET /api/posts/:postId` - Get specific post
+- `PUT /api/posts/:postId` - Update post
+- `DELETE /api/posts/:postId` - Delete post
+- `POST /api/posts/:postId/like` - Like post
+- `DELETE /api/posts/:postId/like` - Unlike post
+- `POST /api/posts/:postId/comments` - Add comment
+- `DELETE /api/posts/:postId/comments/:commentId` - Delete comment
+- `GET /api/posts/search/tag` - Search by tag
+
+### AI Features
+- `POST /api/ai/generate-caption` - Generate single caption
+- `POST /api/ai/generate-suggestions` - Generate multiple captions
+- `POST /api/ai/generate-hashtags` - Generate hashtags
+
+## 📁 Project Structure
+
+```
+MiniGram-AI/
+├── Backend/
+│   ├── src/
+│   │   ├── controllers/
+│   │   │   ├── auth.controller.js
+│   │   │   ├── post.controller.js
+│   │   │   └── ai.controller.js
+│   │   ├── models/
+│   │   │   ├── user.model.js
+│   │   │   └── post.model.js
+│   │   ├── routes/
+│   │   │   ├── auth.routes.js
+│   │   │   ├── post.routes.js
+│   │   │   └── ai.routes.js
+│   │   ├── middlewares/
+│   │   │   └── auth.middleware.js
+│   │   ├── services/
+│   │   │   └── ai.service.js
+│   │   └── db/
+│   │       └── db.js
+│   ├── app.js
+│   ├── server.js
+│   ├── package.json
+│   └── .env.example
+│
+├── Frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   ├── PostForm.jsx
+│   │   │   └── PostCard.jsx
+│   │   ├── pages/
+│   │   │   ├── Authentication.jsx
+│   │   │   ├── Home.jsx
+│   │   │   ├── Explore.jsx
+│   │   │   └── Profile.jsx
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   ├── services/
+│   │   │   ├── axios.js
+│   │   │   └── api.js
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   ├── App.css
+│   │   └── index.css
+│   ├── public/
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── .env.example
+│   └── README.md
+│
+└── README.md
+```
+
+## 🔐 Security Features
+
+- **JWT Authentication**: Secure token-based authentication
+- **HTTP-only Cookies**: Protection against XSS attacks
+- **Password Hashing**: bcryptjs with salt rounds
+- **CORS Configuration**: Restricted cross-origin requests
+- **Input Validation**: Server-side validation on all endpoints
+- **Protected Routes**: Frontend route protection
+- **Email Validation**: Proper email format validation
+
+## 🎨 UI/UX Features
+
+- **Modern Design**: Clean, minimalist interface
+- **Responsive Layout**: Mobile-first design approach
+- **Dark Mode**: Dark mode support with Tailwind CSS
+- **Loading States**: Visual feedback for async operations
+- **Error Handling**: User-friendly error messages
+- **Toast Notifications**: Success and error notifications
+- **Smooth Animations**: CSS transitions and hover effects
+
+## 🐛 Troubleshooting
+
+### CORS Errors
+- Ensure backend CORS is configured correctly
+- Check that frontend URL matches FRONTEND_URL in backend .env
+- Verify cookies are being sent with `withCredentials: true`
+
+### MongoDB Connection Issues
+- Verify MongoDB URI is correct
+- Check IP whitelist in MongoDB Atlas
+- Ensure network access is enabled
+
+### AI API Errors
+- Verify GEMINI_API_KEY is valid
+- Check API quota limits
+- Ensure image descriptions are provided
+
+### Authentication Issues
+- Clear browser cookies
+- Check JWT_SECRET length (min 32 chars)
+- Verify token expiration time
+
+## 📝 Best Practices
+
+- Always use HTTPS in production
+- Keep API keys secure in environment variables
+- Implement rate limiting for API endpoints
+- Add comprehensive error logging
+- Use database indexing for frequently queried fields
+- Implement pagination for large datasets
+- Add input sanitization
+- Use CSRF tokens if needed
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🙏 Acknowledgments
+
+- Google Generative AI for AI capabilities
+- MongoDB for database solutions
+- Tailwind CSS for styling framework
+- React community for amazing tools and libraries
+
+---
+
+**Made with ❤️ by MiniGram-AI Team**
 
 ### Frontend
 - **Library**: React 19.2.0

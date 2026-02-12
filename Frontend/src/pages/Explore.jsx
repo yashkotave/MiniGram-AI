@@ -1,135 +1,192 @@
 import { useState, useEffect } from 'react';
-import { Search, Filter, Flame, Zap, TrendingUp, Eye, Heart, MessageCircle } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import { Search, Loader, X } from 'lucide-react';
+import { postService } from '../services/api';
+import PostCard from '../components/PostCard';
 
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('trending');
-  const [filterCategory, setFilterCategory] = useState('all');
-  const [viewMode, setViewMode] = useState('grid');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [likedPosts, setLikedPosts] = useState(new Set());
-
-  const categories = [
-    { id: 'all', label: 'All Posts', icon: '🎯' },
-    { id: 'photography', label: 'Photography', icon: '📷' },
-    { id: 'art', label: 'Art', icon: '🎨' },
-    { id: 'travel', label: 'Travel', icon: '✈️' },
-    { id: 'food', label: 'Food', icon: '🍽️' },
-    { id: 'technology', label: 'Technology', icon: '💻' },
-    { id: 'lifestyle', label: 'Lifestyle', icon: '🌟' },
-    { id: 'fitness', label: 'Fitness', icon: '💪' },
-  ];
-
-  const sortOptions = [
-    { id: 'trending', label: 'Trending', icon: Flame },
-    { id: 'latest', label: 'Latest', icon: Zap },
-    { id: 'popular', label: 'Most Popular', icon: TrendingUp },
-  ];
+  const [error, setError] = useState('');
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('http://localhost:3000/api/posts');
-        const data = await response.json();
-        setPosts(data.posts || generateMockPosts());
-      } catch {
-        setPosts(generateMockPosts());
-      }
-      setLoading(false);
-    };
-
-    fetchPosts();
+    fetchAllPosts();
   }, []);
 
-  const filteredPosts = posts
-    .filter(post => {
-      const matchesSearch = post.caption?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesCategory = filterCategory === 'all' || post.category === filterCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      if (sortBy === 'trending') return b.likes - a.likes;
-      if (sortBy === 'latest') return new Date(b.createdAt) - new Date(a.createdAt);
-      if (sortBy === 'popular') return b.views - a.views;
-      return 0;
-    });
+  const fetchAllPosts = async (pageNum = 1) => {
+    try {
+      setLoading(true);
+      setError('');
+      const response = await postService.getAllPosts(pageNum, 12);
+      if (response.success) {
+        if (pageNum === 1) {
+          setPosts(response.posts);
+        } else {
+          setPosts([...posts, ...response.posts]);
+        }
+        setHasMore(response.pagination.page < response.pagination.pages);
+        setPage(pageNum);
+      }
+    } catch (error) {
+      console.error('Fetch posts error:', error);
+      setError('Failed to load posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      fetchAllPosts();
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError('');
+      const response = await postService.searchByTag(searchQuery, 1, 12);
+      if (response.success) {
+        setPosts(response.posts);
+        setHasMore(response.pagination.page < response.pagination.pages);
+        setPage(1);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      setError('Failed to search posts');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMore = () => {
+    if (hasMore && !loading) {
+      if (searchQuery.trim()) {
+        handleSearchPage(page + 1);
+      } else {
+        fetchAllPosts(page + 1);
+      }
+    }
+  };
+
+  const handleSearchPage = async (pageNum) => {
+    try {
+      setLoading(true);
+      const response = await postService.searchByTag(searchQuery, pageNum, 12);
+      if (response.success) {
+        setPosts([...posts, ...response.posts]);
+        setHasMore(response.pagination.page < response.pagination.pages);
+        setPage(pageNum);
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePostDeleted = (postId) => {
+    setPosts(posts.filter(post => post._id !== postId));
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    fetchAllPosts();
+  };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950">
-      <Navbar />
-
-      <div className="bg-gradient-to-r from-pink-500 via-orange-500 to-red-500 py-12 text-center text-white">
-        <h1 className="text-5xl font-bold">Explore</h1>
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+          Explore
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400">
+          Discover amazing posts from the community
+        </p>
       </div>
 
-      <main className="max-w-6xl mx-auto p-6">
-
-        <input
-          type="text"
-          placeholder="Search..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full p-3 border rounded mb-6"
-        />
-
-        <div className="flex gap-3 mb-6">
-          {sortOptions.map(opt => (
+      {/* Search Bar */}
+      <div className="mb-8 flex gap-2">
+        <div className="flex-1 relative">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            placeholder="Search by tag..."
+            className="w-full px-4 py-3 pl-10 border border-slate-300 dark:border-slate-700 rounded-lg dark:bg-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+          />
+          <Search size={20} className="absolute left-3 top-3.5 text-slate-400" />
+          {searchQuery && (
             <button
-              key={opt.id}
-              onClick={() => setSortBy(opt.id)}
-              className="px-4 py-2 bg-slate-200 rounded"
+              onClick={clearSearch}
+              className="absolute right-3 top-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
             >
-              {opt.label}
+              <X size={20} />
             </button>
-          ))}
+          )}
         </div>
+        <button
+          onClick={handleSearch}
+          disabled={loading}
+          className="px-6 py-3 bg-pink-500 hover:bg-pink-600 disabled:opacity-50 text-white font-medium rounded-lg transition-colors"
+        >
+          Search
+        </button>
+      </div>
 
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPosts.map(post => (
-              <div key={post.id} className="border rounded overflow-hidden">
-                <img src={post.image} className="w-full h-48 object-cover" />
-                <div className="p-4">
-                  <h3 className="font-bold">{post.caption}</h3>
-                  <p className="text-sm text-gray-500">{formatDate(post.createdAt)}</p>
-                  <div className="flex justify-between mt-2 text-sm">
-                    <span>❤️ {post.likes}</span>
-                    <span>👁️ {post.views}</span>
-                    <span>💬 {post.comments}</span>
-                  </div>
-                </div>
-              </div>
+      {/* Error Message */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-300 text-center">
+          {error}
+        </div>
+      )}
+
+      {/* Posts Grid */}
+      {loading && posts.length === 0 ? (
+        <div className="flex justify-center py-12">
+          <Loader className="animate-spin text-pink-500" size={40} />
+        </div>
+      ) : posts.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-slate-600 dark:text-slate-400 text-lg">
+            No posts found. Try a different search!
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="space-y-6">
+            {posts.map((post) => (
+              <PostCard
+                key={post._id}
+                post={post}
+                onPostDeleted={handlePostDeleted}
+              />
             ))}
           </div>
-        )}
 
-      </main>
-    </div>
+          {hasMore && (
+            <div className="flex justify-center pt-8">
+              <button
+                onClick={loadMore}
+                disabled={loading}
+                className="px-8 py-3 bg-pink-500 hover:bg-pink-600 disabled:opacity-50 text-white font-semibold rounded-lg transition-colors flex items-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <Loader size={18} className="animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Load More'
+                )}
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </main>
   );
-}
-
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const diff = Math.floor((Date.now() - date) / 60000);
-  if (diff < 60) return `${diff}m ago`;
-  return date.toLocaleDateString();
-}
-
-function generateMockPosts() {
-  return Array.from({ length: 9 }, (_, i) => ({
-    id: i + 1,
-    caption: `Post ${i + 1}`,
-    image: `https://via.placeholder.com/400?text=Post+${i + 1}`,
-    likes: Math.floor(Math.random() * 100),
-    comments: Math.floor(Math.random() * 20),
-    views: Math.floor(Math.random() * 1000),
-    category: 'photography',
-    createdAt: new Date().toISOString()
-  }));
 }

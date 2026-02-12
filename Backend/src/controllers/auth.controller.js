@@ -1,7 +1,12 @@
 const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const validator = require('email-validator');
+
+// Simple email validation regex
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
 
 /* =========================
    REGISTER CONTROLLER
@@ -25,7 +30,7 @@ async function registerController(req, res) {
       });
     }
 
-    if (!validator.validate(email)) {
+    if (!validateEmail(email)) {
       return res.status(400).json({
         success: false,
         message: "Invalid email format"
@@ -67,7 +72,7 @@ async function registerController(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     });
 
@@ -139,7 +144,7 @@ async function loginController(req, res) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
     });
 
@@ -173,7 +178,7 @@ async function logoutController(req, res) {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict'
+      sameSite: 'lax'
     });
     
     return res.status(200).json({
