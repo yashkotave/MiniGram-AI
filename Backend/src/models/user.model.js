@@ -8,14 +8,16 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: [3, 'Username must be at least 3 characters'],
         maxlength: [30, 'Username cannot exceed 30 characters'],
-        match: [/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores']
+        match: [/^[a-zA-Z0-9_]+$/, 'Username can only contain letters, numbers, and underscores'],
+        index: true
     },
     email: {
         type: String,
         unique: true,
         required: [true, 'Email is required'],
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please provide a valid email'],
-        lowercase: true
+        lowercase: true,
+        index: true
     },
     password: {
         type: String,
@@ -61,17 +63,15 @@ const userSchema = new mongoose.Schema({
 
 // Virtual for follower count
 userSchema.virtual('followerCount').get(function() {
-    return this.followers.length;
+    return this.followers ? this.followers.length : 0;
 });
 
 // Virtual for following count
 userSchema.virtual('followingCount').get(function() {
-    return this.following.length;
+    return this.following ? this.following.length : 0;
 });
 
 // Index for better query performance
-userSchema.index({ username: 1 });
-userSchema.index({ email: 1 });
 userSchema.index({ createdAt: -1 });
 
 const User = mongoose.model('User', userSchema);

@@ -88,22 +88,31 @@ export default function Authentication() {
     }
 
     setLoading(true);
+    console.log(`[Auth] ${isSignUp ? 'Registering' : 'Logging in'}...`);
 
     try {
       if (isSignUp) {
-        await register(formData.username, formData.password);
+        console.log('[Auth] Register attempt:', { 
+          username: formData.username, 
+          email: formData.email 
+        });
+        const result = await register(formData.username, formData.email, formData.password, formData.confirmPassword);
+        console.log('[Auth] Registration successful:', result);
         setSuccess('Account created successfully! Welcome to MiniGram');
         setTimeout(() => {
           navigate('/profile');
         }, 1500);
       } else {
-        await login(formData.username, formData.password);
+        console.log('[Auth] Login attempt:', { email: formData.email });
+        const result = await login(formData.email, formData.password);
+        console.log('[Auth] Login successful:', result);
         setSuccess('Welcome back! Redirecting...');
         setTimeout(() => {
           navigate('/profile');
         }, 1500);
       }
     } catch (err) {
+      console.error('[Auth] Error:', err);
       setError(err.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);

@@ -72,39 +72,18 @@ const postSchema = new mongoose.Schema({
 
 // Virtual for like count
 postSchema.virtual('likeCount').get(function() {
-    return this.likes.length;
+    return this.likes ? this.likes.length : 0;
 });
 
 // Virtual for comment count
 postSchema.virtual('commentCount').get(function() {
-    return this.comments.length;
+    return this.comments ? this.comments.length : 0;
 });
 
 // Index for better query performance
 postSchema.index({ author: 1, createdAt: -1 });
 postSchema.index({ createdAt: -1 });
 postSchema.index({ tags: 1 });
-
-// Populate author by default on queries
-postSchema.pre(/^find/, function(next) {
-    if (this.options._recursed) {
-        return next();
-    }
-    this.populate({
-        path: 'author',
-        select: 'username profileImage fullName'
-    });
-    this.populate({
-        path: 'likes',
-        select: 'username'
-    });
-    this.populate({
-        path: 'comments.author',
-        select: 'username profileImage'
-    });
-    this.options._recursed = true;
-    next();
-});
 
 const Post = mongoose.model('Post', postSchema);
 module.exports = Post;

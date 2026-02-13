@@ -3,31 +3,50 @@ import axiosInstance from './axios';
 // Auth Service
 export const authService = {
   register: async (username, email, password, passwordConfirm) => {
-    const response = await axiosInstance.post('/auth/register', {
-      username,
-      email,
-      password,
-      passwordConfirm
-    });
-    return response.data;
+    try {
+      const response = await axiosInstance.post('/auth/register', {
+        username,
+        email,
+        password,
+        passwordConfirm
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Registration failed';
+      throw new Error(message);
+    }
   },
 
   login: async (email, password) => {
-    const response = await axiosInstance.post('/auth/login', {
-      email,
-      password
-    });
-    return response.data;
+    try {
+      const response = await axiosInstance.post('/auth/login', {
+        email,
+        password
+      });
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Login failed';
+      throw new Error(message);
+    }
   },
 
   logout: async () => {
-    const response = await axiosInstance.post('/auth/logout');
-    return response.data;
+    try {
+      const response = await axiosInstance.post('/auth/logout');
+      return response.data;
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Logout failed';
+      throw new Error(message);
+    }
   },
 
   getCurrentUser: async () => {
-    const response = await axiosInstance.get('/auth/me');
-    return response.data;
+    try {
+      const response = await axiosInstance.get('/auth/me');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
   updateProfile: async (fullName, bio, profileImage) => {

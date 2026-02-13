@@ -132,6 +132,15 @@ async function getUserFeedController(req, res) {
 async function getUserPostsController(req, res) {
   try {
     const { userId } = req.params;
+    
+    // Validate userId
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required"
+      });
+    }
+
     const { page = 1, limit = 10 } = req.query;
     const skip = (page - 1) * limit;
 
