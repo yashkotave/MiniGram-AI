@@ -1,9 +1,7 @@
-const { GoogleGenAI } = require("@google/genai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-// Initialize Google GenAI with API key from environment
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-});
+// Initialize Google Generative AI with API key from environment
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 /**
  * Generate caption for an image using Google Gemini AI
@@ -25,26 +23,10 @@ async function generateCaption(imageDescription, base64Image = null) {
         - Be 50-150 characters including hashtags
         Return only the caption, nothing else.`;
 
-        const contents = [
-            { text: prompt }
-        ];
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        // If base64 image is provided, add it to the request
-        if (base64Image) {
-            contents.unshift({
-                inlineData: {
-                    mimeType: "image/jpeg",
-                    data: base64Image,
-                },
-            });
-        }
-
-        const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
-            contents: contents,
-        });
-
-        const caption = response.text;
+        const result = await model.generateContent(prompt);
+        const caption = result.response.text();
         
         if (!caption) {
             throw new Error("Failed to generate caption");
