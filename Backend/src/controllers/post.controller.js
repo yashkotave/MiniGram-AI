@@ -54,13 +54,17 @@ async function getAllPostsController(req, res) {
     const { page = 1, limit = 10, sort = '-createdAt' } = req.query;
     const skip = (page - 1) * limit;
 
+    // Get posts with basic population
     const posts = await Post.find()
       .sort(sort)
       .skip(skip)
       .limit(parseInt(limit))
-      .populate('author', 'username profileImage fullName')
-      .populate('likes', 'username')
-      .populate('comments.author', 'username profileImage');
+      .populate('author', 'username profileImage fullName _id')
+      .populate({
+        path: 'comments.author',
+        select: 'username profileImage _id'
+      })
+      .exec();
 
     const total = await Post.countDocuments();
 
@@ -94,16 +98,19 @@ async function getUserFeedController(req, res) {
 
     // Get current user's following list
     const user = await User.findById(userId);
-    const followingIds = user.following;
+    const followingIds = user?.following || [];
     followingIds.push(userId); // Include own posts
 
     const posts = await Post.find({ author: { $in: followingIds } })
       .sort('-createdAt')
       .skip(skip)
       .limit(parseInt(limit))
-      .populate('author', 'username profileImage fullName')
-      .populate('likes', 'username')
-      .populate('comments.author', 'username profileImage');
+      .populate('author', 'username profileImage fullName _id')
+      .populate({
+        path: 'comments.author',
+        select: 'username profileImage _id'
+      })
+      .exec();
 
     const total = await Post.countDocuments({ author: { $in: followingIds } });
 
