@@ -59,12 +59,10 @@ async function generateCaptionSuggestions(imageDescription) {
         
         Format the response as a numbered list (1. Caption, 2. Caption, 3. Caption). Return only the captions, nothing else.`;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
-            contents: [{ text: prompt }],
-        });
-
-        const text = response.text;
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
+        
         const captions = text
             .split('\n')
             .filter(line => line.trim())
@@ -94,12 +92,10 @@ async function generateHashtags(caption) {
         
         Return only the hashtags separated by spaces, starting with # (e.g., #hashtag1 #hashtag2). No numbering or other text.`;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
-            contents: [{ text: prompt }],
-        });
-
-        const text = response.text;
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const result = await model.generateContent(prompt);
+        const text = result.response.text();
+        
         const hashtags = text
             .split(/\s+/)
             .filter(tag => tag.startsWith('#'))
